@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyrit (C) 2018 Digiwin Inc.
+# Copyright (C) 2018 Digiwin Inc.
 #
 
 
