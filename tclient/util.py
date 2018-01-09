@@ -11,10 +11,10 @@ from threading import Lock
 from ConfigParser import SafeConfigParser
 
 try:
-    from collections import OrderedDict as _default_dict
+    from collections import OrderedDict as default_dict
 except ImportError:
     # fallback for setup.py which hasn't yet built _collections
-    _default_dict = dict
+    default_dict = dict
 
 
 class MyConfigParser(SafeConfigParser):
@@ -22,7 +22,7 @@ class MyConfigParser(SafeConfigParser):
 
     write_lock = Lock()  # 写入锁， 同时只允许一个线程进行配置文件写入操作
 
-    def __init__(self, defaults=None, dict_type=_default_dict, allow_no_value=False):
+    def __init__(self, defaults=None, dict_type=default_dict, allow_no_value=False):
         SafeConfigParser.__init__(self, defaults, dict_type, allow_no_value)
         self._config_filename = None  # 打开并解析的配置文件名
 
@@ -87,3 +87,15 @@ def convert_unicode_to_str(data, ignore_dicts=False):
         return {convert_unicode_to_str(key, ignore_dicts=True): convert_unicode_to_str(value)
                 for (key, value) in data.iteritems()}
     return data
+
+
+def to_unicode(string):
+    """将一个字符串转换为 Unicode. 如果传入值不为字符串则引起 TypeError 错误."""
+
+    base_str = (basestring, type(None))
+    base_unicode = (unicode, type(None))
+    if isinstance(string, base_unicode):
+        return string
+    if not isinstance(string, base_str):
+        raise TypeError("Expected str, unicode, or None; got {0}".format(type(string)))
+    return string.decode('utf-8')
