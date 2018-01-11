@@ -14,7 +14,7 @@ tclient 使用三种 logger：
 
 import logging
 import logging.handlers as handlers
-import os.path
+import os
 from tclient.config import root_dir
 
 
@@ -53,6 +53,19 @@ class DefaultHandler(handlers.TimedRotatingFileHandler):
                                                    encoding=encoding)
         self.setLevel(logging.DEBUG)
         self.setFormatter(DefaultFormatter())
+
+    def emit(self, record):
+        """新增功能： 如果路径不存在，则创建对应的目录."""
+
+        log_dir = os.path.dirname(self.baseFilename)
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+        elif not os.path.isdir(log_dir):
+            os.remove(log_dir)
+            os.makedirs(log_dir)
+        else:
+            pass
+        handlers.TimedRotatingFileHandler.emit(self, record)
 
 
 def construct_logger(name):
