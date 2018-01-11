@@ -54,8 +54,9 @@ class DefaultHandler(handlers.TimedRotatingFileHandler):
         self.setLevel(logging.DEBUG)
         self.setFormatter(DefaultFormatter())
 
-    def emit(self, record):
-        """新增功能： 如果路径不存在，则创建对应的目录."""
+    def _open(self):
+        # 新增功能： 如果路径不存在，则创建对应的目录.
+        # 重构从 logging.FileHandler 类继承的 _open 方法
 
         log_dir = os.path.dirname(self.baseFilename)
         if not os.path.exists(log_dir):
@@ -65,7 +66,7 @@ class DefaultHandler(handlers.TimedRotatingFileHandler):
             os.makedirs(log_dir)
         else:
             pass
-        handlers.TimedRotatingFileHandler.emit(self, record)
+        return handlers.TimedRotatingFileHandler._open(self)
 
 
 def construct_logger(name):
