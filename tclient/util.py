@@ -6,6 +6,8 @@
 """提供一些工具性函数和类"""
 
 
+import hashlib
+import os.path
 import subprocess
 from threading import Lock
 from ConfigParser import SafeConfigParser
@@ -99,3 +101,23 @@ def to_unicode(string):
     if not isinstance(string, base_str):
         raise TypeError("Expected str, unicode, or None; got {0}".format(type(string)))
     return string.decode('utf-8')
+
+
+def cal_md5(filename):
+    """返回文件的 MD5 校验码"""
+
+    if not os.path.exists(filename):
+        raise IOError('{0} not exists'.format(filename))
+    if not os.path.isfile(filename):
+        raise ValueError('{0} is not a file'.formate(filename))
+
+    md5obj = hashlib.md5()
+    try:
+        with open(filename, 'rb') as f:
+            md5obj.update(f.read())
+    except IOError as i:
+        raise i("failed to read {0}".format(filename))
+    except Exception:
+        raise Exception('failed to calculate md5')
+
+    return md5obj.hexdigest()
