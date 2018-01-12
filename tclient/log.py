@@ -22,7 +22,7 @@ mon_log.debug(safe_logmsg('时间 %s' % '不确定')
 import logging
 import logging.handlers as handlers
 import os
-from tclient.config import root_dir
+from tclient.config import ROOT_DIR
 from tclient.util import to_unicode
 
 
@@ -82,7 +82,7 @@ def construct_logger(name):
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
-    logger.addHandler(DefaultHandler(os.path.join(root_dir, 'log', name)))
+    logger.addHandler(DefaultHandler(os.path.join(ROOT_DIR, 'log', name)))
     return logger
 
 

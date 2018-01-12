@@ -3,4 +3,5 @@
 #
 
 
-root_dir = ''
+ROOT_DIR = ''
+BASE_URL = 'http://172.16.101.43/wstopprd'
