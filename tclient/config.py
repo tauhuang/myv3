@@ -15,7 +15,7 @@ class SafeBaseURL(object):
     def base_url(self):
         url = self._base_url.lstrip('http://')
         url = url.replace('//', '/')
-        url = ''.join('http://', url)
+        url = ''.join(['http://', url])
         return url.rstrip('/')
 
     @base_url.setter
