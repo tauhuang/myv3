@@ -23,7 +23,7 @@ import logging
 import logging.handlers as handlers
 import os
 from tclient.config import ROOT_DIR
-from tclient.util import to_unicode
+from tclient.util import to_unicode, mkdir_not_exists
 
 
 class DefaultFormatter(logging.Formatter):
@@ -67,13 +67,7 @@ class DefaultHandler(handlers.TimedRotatingFileHandler):
         # 重构从 logging.FileHandler 类继承的 _open 方法
 
         log_dir = os.path.dirname(self.baseFilename)
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-        elif not os.path.isdir(log_dir):
-            os.remove(log_dir)
-            os.makedirs(log_dir)
-        else:
-            pass
+        mkdir_not_exists(log_dir)
         return handlers.TimedRotatingFileHandler._open(self)
 
 
