@@ -103,7 +103,7 @@ def to_unicode(string):
     return string.decode('utf-8')
 
 
-def cal_md5(filename):
+def cal_file_md5(filename):
     """返回文件的 MD5 校验码"""
 
     if not os.path.exists(filename):
