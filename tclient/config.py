@@ -3,8 +3,12 @@
 #
 
 
+import os.path
+
+
 ROOT_DIR = ''
 BASE_URL = 'http://172.16.101.43/wstopprd/ws/r'
+DEFAULT_CONF = os.path.join(ROOT_DIR, 'conf', 'tclient.cnf')
 
 
 class SafeBaseURL(object):

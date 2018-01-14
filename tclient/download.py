@@ -7,7 +7,7 @@ import os.path
 import requests
 import uuid
 from tclient import version
-from tclient.config import ROOT_DIR, SafeBaseURL
+from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF
 from tclient.log import job_log
 from tclient.util import mkdir_not_exists, cal_file_md5, MyConfigParser
 
@@ -41,7 +41,7 @@ def compare_md5(md5key, filename):
 
 def notify_update(filename):
     cnf = MyConfigParser()
-    cnf.read(os.path.join(ROOT_DIR, 'conf', 'tclient.conf'))
+    cnf.read(DEFAULT_CONF)
     if not cnf.has_section('update'):
         cnf.add_section('update')
     cnf.set('update', 'prepare', value='Y')
