@@ -92,4 +92,7 @@ job_log = construct_logger('job')
 
 
 def safe_logmsg(msg):
-    return to_unicode(msg)
+    try:
+        return to_unicode(msg)
+    except UnicodeDecodeError:
+        return repr(msg)
