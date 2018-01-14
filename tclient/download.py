@@ -5,7 +5,8 @@
 
 import requests
 from tclient import version
+from tclient.config import BASE_URL
 
 
 def send_get_requests():
-    r = requests.get(url='http://172.16.101.43/wstopprd/ws/r/tclientDojson', params={'arg': version})
+    r = requests.get(url='/tclientDojson', params={'arg': version})
