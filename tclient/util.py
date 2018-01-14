@@ -7,7 +7,7 @@
 
 
 import hashlib
-import os.path
+import os
 import subprocess
 from threading import Lock
 from ConfigParser import SafeConfigParser
@@ -115,9 +115,25 @@ def cal_md5(filename):
     try:
         with open(filename, 'rb') as f:
             md5obj.update(f.read())
-    except IOError as i:
-        raise i("failed to read {0}".format(filename))
+    except IOError:
+        raise IOError('failed to read {0}'.format(filename))
     except Exception:
         raise Exception('failed to calculate md5')
 
     return md5obj.hexdigest()
+
+
+def mkdir_not_exists(path):
+    """路径不存在，则创建路径
+
+    若存在同名文件，则重命名该文件为原文件名加后缀 '.bak'"""
+    if not isinstance(path, basestring):
+        raise TypeError('path argument expected string, you gave {0}'.format(type(path)))
+    path = path.rstrip(os.path.sep)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    elif not os.path.isdir(path):
+        os.rename(path, '.'.join([path, 'bak']))
+        os.makedirs(path)
+    else:
+        pass
