@@ -62,7 +62,7 @@ def download_zip():
         pass
     download_file = os.path.join(download_path, filename)
     try:
-        with open(download_file, 'rb') as f:
+        with open(download_file, 'wb') as f:
             f.write(response.content)
         if not compare_md5(md5key, download_file):
             job_log.warning('id: {0}, the md5 key of update file not match the server gave'.format(_LOG_ID))
