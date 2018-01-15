@@ -5,4 +5,4 @@
 
 __version__ = "3.0.0 beta"
 version = __version__
-__all__ = ['version', '__version__', 'tclient']
+version_info = (3, 0, 0, 'beta')
