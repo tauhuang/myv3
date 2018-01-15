@@ -29,7 +29,7 @@ def update_file(src_file):
     if os.path.exists(src_file):
         try:
             t = tarfile.open(src_file, 'r')
-            t.extract(ROOT_DIR)
+            t.extractall(ROOT_DIR)
         except:
             mon_log.warning('failed to extract file "{0}"'.format(src_file))
     else:
