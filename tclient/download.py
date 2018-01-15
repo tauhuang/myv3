@@ -51,7 +51,7 @@ def notify_update(filename):
 
 def download_zip():
     md5key, filename, url = get_download_url()
-    download_path = os.path.join([ROOT_DIR, 'download'])
+    download_path = os.path.join(ROOT_DIR, 'download')
     mkdir_not_exists(download_path)
 
     if not (md5key and filename and url):
