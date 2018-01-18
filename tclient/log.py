@@ -76,7 +76,7 @@ def construct_logger(name):
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
-    logger.addHandler(DefaultHandler(os.path.join(ROOT_DIR, 'log', name)))
+    logger.addHandler(DefaultHandler(os.path.join(ROOT_DIR, 'log', name+'.log')))
     return logger
 
 
