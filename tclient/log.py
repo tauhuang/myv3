@@ -71,6 +71,36 @@ class DefaultHandler(handlers.TimedRotatingFileHandler):
         return handlers.TimedRotatingFileHandler._open(self)
 
 
+class DefaultFileHandler(handlers.RotatingFileHandler):
+    """tclient 中日志 handler, 继承自 logging.handlers.RotatingFileHandler
+
+    必须传入文件名 filename. 日志文件会存在于 tclient 根目录下的 log 下的 以当前日期（格式20180105)命名的目录下.
+    例如: tclient 根目录是 /u1/usr/tiptop， 那么当前日志文件的完整路径是 /u1/usr/tiptop/tclient/log/20180105/job.log"""
+
+    def __init__(self, filename, max_bytes=0, backup_count=0, encoding='utf-8'):
+        handlers.RotatingFileHandler.__init__(self,
+                                              filename=filename,
+                                              maxBytes=max_bytes,
+                                              backupCount=backup_count,
+                                              encoding=encoding)
+        self.setLevel(logging.DEBUG)
+        self.setFormatter(DefaultFormatter())
+
+    def _open(self):
+        # 新增功能： 如果路径不存在，则创建对应的目录.
+        # 重构从 logging.FileHandler 类继承的 _open 方法
+
+        log_dir = os.path.dirname(self.baseFilename)
+        mkdir_not_exists(log_dir)
+        return handlers.RotatingFileHandler._open(self)
+
+    def shouldRollover(self, record):
+        pass
+
+    def doRollover(self):
+        pass
+
+
 def construct_logger(name):
     """传入名称，返回 logger"""
 
