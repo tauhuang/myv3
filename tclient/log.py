@@ -47,14 +47,14 @@ class DefaultFileHandler(handlers.BaseRotatingHandler):
     """keep_days 日志保留天数，如果为 0 则永久保留，默认保留 7 天"""
 
     def __init__(self, filename, keep_days=7):
+        absfilename = os.path.join(_BASE_LOGDIR,
+                                         datetime.date.today().strftime(_DATE_FORMAT),
+                                         filename)
         handlers.BaseRotatingHandler.__init__(self,
-                                              filename=filename,
+                                              filename=absfilename,
                                               mode='a',
                                               encoding='utf-8')
         # 日志完整名称为 tclient 根目录/log/日期/filename
-        self.baseFilename = os.path.join(_BASE_LOGDIR,
-                                         datetime.date.today().strftime(_DATE_FORMAT),
-                                         filename)
         self._keep_days = int(keep_days)
         self.setLevel(logging.DEBUG)
         self.setFormatter(DefaultFormatter())
