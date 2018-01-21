@@ -23,12 +23,13 @@ import logging
 import logging.handlers as handlers
 import os
 import shutil
-import time
+import datetime
 from tclient.config import ROOT_DIR
 from tclient.util import to_unicode, mkdir_not_exists
 
 
 _BASE_LOGDIR = os.path.join(ROOT_DIR, 'log')
+_DATE_FORMAT = '%Y%m%d'  # format: 20180105
 
 
 class DefaultFormatter(logging.Formatter):
@@ -44,6 +45,7 @@ class DefaultFormatter(logging.Formatter):
 
 class DefaultFileHandler(handlers.BaseRotatingHandler):
     """keep_days 日志保留天数，如果为 0 则永久保留，默认保留 7 天"""
+
     def __init__(self, filename, keep_days=7):
         handlers.BaseRotatingHandler.__init__(self,
                                               filename=filename,
@@ -51,9 +53,9 @@ class DefaultFileHandler(handlers.BaseRotatingHandler):
                                               encoding='utf-8')
         # 日志完整名称为 tclient 根目录/log/日期/filename
         self.baseFilename = os.path.join(_BASE_LOGDIR,
-                                         time.strftime('%Y%m%d', time.localtime()),
+                                         datetime.date.today().strftime(_DATE_FORMAT),
                                          filename)
-        self._keep_days = keep_days
+        self._keep_days = int(keep_days)
         self.setLevel(logging.DEBUG)
         self.setFormatter(DefaultFormatter())
 
@@ -66,16 +68,32 @@ class DefaultFileHandler(handlers.BaseRotatingHandler):
         return handlers.BaseRotatingHandler._open(self)
 
     def shouldRollover(self, record):
-        pass
+        base_dirname = str(os.path.basename(os.path.dirname(self.baseFilename)))
+        today_date = str(datetime.date.today().strftime(_DATE_FORMAT))
+        if base_dirname == today_date:
+            return 0
+        else:
+            return 1
 
-    def get_logdir_to_delete(self):
-        pass
+    def get_logdirs_to_delete(self):
+        _, dirs, _ = next(os.walk(_BASE_LOGDIR))
+        # dirname's format must like '20180105'
+        log_dirs = [d for d in dirs if d.isdigit() and len(d) == 8]
+        # the earlist date of dirname to keep
+        md = datetime.date.today() - datetime.timedelta(days=self._keep_days)
+        # convert datetime.date to datetime.datetime type
+        earlist_date = datetime.datetime(md.year, md.month, md.day)
+        logdirs = []
+        for dname in log_dirs:
+            if datetime.datetime.strptime(dname, _DATE_FORMAT) < earlist_date:
+                logdirs.append(dname)
+        return logdirs
 
     def doRollover(self):
-        dir_named_date = time.strftime('%Y%m%d', time.localtime())
-        self.baseFilename = os.path.join(_BASE_LOGDIR, dir_named_date, os.path.basename(self.baseFilename))
+        today = datetime.date.today().strftime(_DATE_FORMAT)
+        self.baseFilename = os.path.join(_BASE_LOGDIR, today, os.path.basename(self.baseFilename))
         if self._keep_days > 0:
-            for s in self.get_logdir_to_delete():
+            for s in self.get_logdirs_to_delete():
                 shutil.rmtree(s, ignore_errors=True)
 
 
