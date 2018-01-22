@@ -7,7 +7,7 @@ import os.path
 import requests
 import uuid
 from tclient import version
-from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF
+from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF, get_erp_lic
 from tclient.log import job_log
 from tclient.util import mkdir_not_exists, cal_file_md5, MyConfigParser
 
@@ -28,7 +28,7 @@ def get_download_url():
     """返回更新包压缩文件包的 md5 校验值和下载 URL"""
 
     url = '/'.join([_BASE_URL.base_url, 'tclientDojson'])
-    response = requests.get(url=url, params={'arg': version})
+    response = requests.get(url=url, params={'arg': version, 'erpLic': get_erp_lic()})
     if response_ok(response):
         response_body = response.json()
         return response_body['md5'], response_body['file'], response_body['url']

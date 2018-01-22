@@ -27,3 +27,20 @@ class SafeBaseURL(object):
         if not isinstance(value, basestring):
             raise TypeError('base_url expected a string, you gave a {0}'.format(type(value)))
         self._base_url = value
+
+
+safe_baseurl = SafeBaseURL()
+
+
+def get_erp_lic():
+    lic_file = "/u1/topkey/reg.cfg"
+    pattern = "License"
+    try:
+        with open(lic_file, 'rt') as f:
+            for line in f:
+                if re.search(pattern, line, flags=re.I):
+                    lic_no = line.split("=")[1].strip()
+                    return {"t100Lic": lic_no}
+    except IOError:
+        return {"t100Lic": ""}
+    return {"t100Lic": ""}
