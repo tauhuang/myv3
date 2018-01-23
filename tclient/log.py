@@ -48,14 +48,15 @@ class DefaultFileHandler(handlers.BaseRotatingHandler):
 
     def __init__(self, filename, keep_days=7):
         absfilename = os.path.join(_BASE_LOGDIR,
-                                         datetime.date.today().strftime(_DATE_FORMAT),
-                                         filename)
+                                   datetime.date.today().strftime(_DATE_FORMAT),
+                                   filename)
         handlers.BaseRotatingHandler.__init__(self,
                                               filename=absfilename,
                                               mode='a',
                                               encoding='utf-8')
         # 日志完整名称为 tclient 根目录/log/日期/filename
         self._keep_days = int(keep_days)
+        self.delete_expired_log()
         self.setLevel(logging.DEBUG)
         self.setFormatter(DefaultFormatter())
 
@@ -75,7 +76,7 @@ class DefaultFileHandler(handlers.BaseRotatingHandler):
         else:
             return 1
 
-    def get_logdirs_to_delete(self):
+    def get_expired_logdir(self):
         _, dirs, _ = next(os.walk(_BASE_LOGDIR))
         # dirname's format must like '20180105'
         log_dirs = [d for d in dirs if d.isdigit() and len(d) == 8]
@@ -87,14 +88,17 @@ class DefaultFileHandler(handlers.BaseRotatingHandler):
         for dname in log_dirs:
             if datetime.datetime.strptime(dname, _DATE_FORMAT) < earlist_date:
                 logdirs.append(dname)
-        return logdirs
+        return [os.path.join(_BASE_LOGDIR, path) for path in logdirs]
+
+    def delete_expired_log(self):
+        if self._keep_days >0:
+            for s in self.get_expired_logdir():
+                shutil.rmtree(s, ignore_errors=True)
 
     def doRollover(self):
         today = datetime.date.today().strftime(_DATE_FORMAT)
         self.baseFilename = os.path.join(_BASE_LOGDIR, today, os.path.basename(self.baseFilename))
-        if self._keep_days > 0:
-            for s in self.get_logdirs_to_delete():
-                shutil.rmtree(s, ignore_errors=True)
+        self.delete_expired_log()
 
 
 def construct_logger(name):
