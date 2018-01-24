@@ -28,8 +28,8 @@ from tclient.config import ROOT_DIR
 from tclient.util import to_unicode, mkdir_not_exists
 
 
-_BASE_LOGDIR = os.path.join(ROOT_DIR, 'log')
-_DATE_FORMAT = '%Y%m%d'  # format: 20180105
+BASE_LOGDIR = os.path.join(ROOT_DIR, 'log')
+DATE_FORMAT = '%Y%m%d'  # format: 20180105
 
 
 class DefaultFormatter(logging.Formatter):
@@ -47,8 +47,8 @@ class DefaultFileHandler(handlers.BaseRotatingHandler):
     """keep_days 日志保留天数，如果为 0 则永久保留，默认保留 7 天"""
 
     def __init__(self, filename, keep_days=7):
-        absfilename = os.path.join(_BASE_LOGDIR,
-                                   datetime.date.today().strftime(_DATE_FORMAT),
+        absfilename = os.path.join(BASE_LOGDIR,
+                                   datetime.date.today().strftime(DATE_FORMAT),
                                    filename)
         handlers.BaseRotatingHandler.__init__(self,
                                               filename=absfilename,
@@ -70,14 +70,14 @@ class DefaultFileHandler(handlers.BaseRotatingHandler):
 
     def shouldRollover(self, record):
         base_dirname = str(os.path.basename(os.path.dirname(self.baseFilename)))
-        today_date = str(datetime.date.today().strftime(_DATE_FORMAT))
+        today_date = str(datetime.date.today().strftime(DATE_FORMAT))
         if base_dirname == today_date:
             return 0
         else:
             return 1
 
     def get_expired_logdir(self):
-        _, dirs, _ = next(os.walk(_BASE_LOGDIR))
+        _, dirs, _ = next(os.walk(BASE_LOGDIR))
         # dirname's format must like '20180105'
         log_dirs = [d for d in dirs if d.isdigit() and len(d) == 8]
         # the earlist date of dirname to keep
@@ -86,9 +86,9 @@ class DefaultFileHandler(handlers.BaseRotatingHandler):
         earlist_date = datetime.datetime(md.year, md.month, md.day)
         logdirs = []
         for dname in log_dirs:
-            if datetime.datetime.strptime(dname, _DATE_FORMAT) < earlist_date:
+            if datetime.datetime.strptime(dname, DATE_FORMAT) < earlist_date:
                 logdirs.append(dname)
-        return [os.path.join(_BASE_LOGDIR, path) for path in logdirs]
+        return [os.path.join(BASE_LOGDIR, path) for path in logdirs]
 
     def delete_expired_log(self):
         if self._keep_days >0:
@@ -96,8 +96,8 @@ class DefaultFileHandler(handlers.BaseRotatingHandler):
                 shutil.rmtree(s, ignore_errors=True)
 
     def doRollover(self):
-        today = datetime.date.today().strftime(_DATE_FORMAT)
-        self.baseFilename = os.path.join(_BASE_LOGDIR, today, os.path.basename(self.baseFilename))
+        today = datetime.date.today().strftime(DATE_FORMAT)
+        self.baseFilename = os.path.join(BASE_LOGDIR, today, os.path.basename(self.baseFilename))
         self.delete_expired_log()
 
 
