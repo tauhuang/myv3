@@ -27,7 +27,7 @@ def response_ok(response):
 def get_download_url():
     """返回更新包压缩文件包的 md5 校验值和下载 URL"""
 
-    url = '/'.join([_BASE_URL.base_url, 'tclientDojson'])
+    url = '/'.join([_BASE_URL.base_url, 'updateprog'])
     response = requests.get(url=url, params={'arg': version, 'erpLic': get_erp_lic()})
     if response_ok(response):
         response_body = response.json()
