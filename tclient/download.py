@@ -8,7 +8,7 @@ import requests
 import uuid
 from tclient import version
 from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF, get_erp_lic
-from tclient.log import job_log
+from tclient.log import job_log, safe_logmsg
 from tclient.util import mkdir_not_exists, cal_file_md5, MyConfigParser
 
 
@@ -18,20 +18,44 @@ _LOG_ID = uuid.uuid4()
 
 def response_ok(response):
     if not response.ok:
-        job_log.warning('id: {0}, request: {1}, response: code: {2}, reason: {3}, message {4}'.format(
-            _LOG_ID, response.request, response.status_code, response.reason, response.content))
+        job_log.warning(
+            safe_logmsg(
+                'id: {0}, request: {1}, response: code: {2}, reason: {3}, message {4}'.format(
+                    _LOG_ID, response.request, response.status_code, response.reason, response.content
+                )
+            )
+        )
         return False
     return True
 
 
-def get_download_url():
+def has_update(response_body):
+    updatestat = response_body['update']
+    if isinstance(updatestat, basestring):
+        return updatestat.upper() == u'Y'
+    else:
+        job_log.warning(
+            safe_logmsg(
+                'id: {0}, response key "update" value is not string type, value is {1} type: {2}'.format(
+                    _LOG_ID, updatestat, type(updatestat)
+                )
+            )
+        )
+        return False
+
+def get_download_url(version, erp_license):
     """返回更新包压缩文件包的 md5 校验值和下载 URL"""
 
     url = '/'.join([_BASE_URL.base_url, 'updateprog'])
-    response = requests.get(url=url, params={'arg': version, 'erpLic': get_erp_lic()})
+    response = requests.get(url=url, params={'arg': version, 'erpLic': erp_license})
     if response_ok(response):
         response_body = response.json()
-        return response_body['md5'], response_body['file'], response_body['url']
+        if has_update(response_body):
+            try:
+                url, md5, filename = response_body['url'], response_body[u'md5'], response_body[u'filename']
+                return url, md5, filename
+            except KeyError:
+                job_log.exception('not found key in response json')
     return '', '', ''
 
 
@@ -50,12 +74,13 @@ def notify_update(filename):
 
 
 def download_zip():
-    md5key, filename, url = get_download_url()
+    url, md5key, filename = get_download_url(version, get_erp_lic())
     download_path = os.path.join(ROOT_DIR, 'download')
     mkdir_not_exists(download_path)
 
     if not (md5key and filename and url):
         job_log.warning('id: {0}, md5key: {1}, download url: {2}'.format(_LOG_ID, md5key, url))
+        return
 
     response = requests.get(url=url)
     if not response_ok(response):
