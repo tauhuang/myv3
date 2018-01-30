@@ -7,7 +7,7 @@ import os.path
 import requests
 import uuid
 from tclient import version
-from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF, get_erp_lic
+from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF, ERPLicense
 from tclient.log import job_log, safe_logmsg
 from tclient.util import mkdir_not_exists, cal_file_md5, MyConfigParser
 
@@ -20,8 +20,8 @@ def response_ok(response):
     if not response.ok:
         job_log.warning(
             safe_logmsg(
-                'id: {0}, request: {1}, response: code: {2}, reason: {3}, message {4}'.format(
-                    _LOG_ID, response.request, response.status_code, response.reason, response.content
+                'id: {0}, request_url: {1}, response: code: {2}, reason: {3}, message {4}'.format(
+                    _LOG_ID, response.url, response.status_code, response.reason, response.content
                 )
             )
         )
@@ -47,7 +47,7 @@ def get_download_url(version, erp_license):
     """返回更新包压缩文件包的 md5 校验值和下载 URL"""
 
     url = '/'.join([_BASE_URL.base_url, 'updateprog'])
-    response = requests.get(url=url, params={'arg': version, 'erpLic': erp_license})
+    response = requests.get(url=url, params={'version': version, 'erpLic': erp_license})
     if response_ok(response):
         response_body = response.json()
         if has_update(response_body):
@@ -74,7 +74,7 @@ def notify_update(filename):
 
 
 def download_zip():
-    url, md5key, filename = get_download_url(version, get_erp_lic())
+    url, md5key, filename = get_download_url(version, ERPLicense().license)
     download_path = os.path.join(ROOT_DIR, 'download')
     mkdir_not_exists(download_path)
 

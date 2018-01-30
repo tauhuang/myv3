@@ -8,7 +8,7 @@ import datetime
 import os
 import requests
 import uuid
-from config import safe_baseurl, get_erp_lic
+from config import safe_baseurl, ERPLicense
 from tclient.log import job_log, DATE_FORMAT, BASE_LOGDIR
 from tclient.util import cal_file_md5
 
@@ -60,7 +60,7 @@ def http_post(json_dict):
 
 def upload_file(filename):
     post_json = {
-                 'erpLic': get_erp_lic(),
+                 'erpLic': ERPLicense().license,
                  'md5': get_filemd5(filename),
                  'isEnd': 'N',
                  'fileName': os.path.basename(filename),

@@ -33,15 +33,32 @@ class SafeBaseURL(object):
 safe_baseurl = SafeBaseURL()
 
 
-def get_erp_lic():
-    lic_file = "/u1/topkey/reg.cfg"
-    pattern = "License"
-    try:
-        with open(lic_file, 'rt') as f:
-            for line in f:
-                if re.search(pattern, line, flags=re.I):
-                    lic_no = line.split("=")[1].strip()
-                    return {"t100Lic": lic_no}
-    except IOError:
-        return {"t100Lic": ""}
-    return {"t100Lic": ""}
+class ERPLicense(object):
+    """T100 ERP License Number"""
+
+    def __init__(self):
+        self.license = self._get_lic()
+
+    @property
+    def license(self):
+        return self.license
+
+    @license.setter
+    def license(self, lic_no):
+        try:
+            self.license = str(lic_no).upper()
+        except Exception:
+            self.license = repr(lic_no).upper()
+
+    def _get_lic(self):
+        lic_file = "/u1/topkey/reg.cfg"
+        pattern = "License"
+        try:
+            with open(lic_file, 'rt') as f:
+                for line in f:
+                    if re.search(pattern, line, flags=re.I):
+                        lic_no = line.split("=")[1].strip()
+                        return lic_no
+        except IOError:
+            return ""
+        return ""
