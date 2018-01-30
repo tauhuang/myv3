@@ -8,6 +8,7 @@ import requests
 import uuid
 from tclient import version
 from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF, erp_license
+from tclient.feedback import feedback
 from tclient.log import job_log, safe_logmsg
 from tclient.util import mkdir_not_exists, cal_file_md5, MyConfigParser
 
@@ -52,7 +53,7 @@ def get_download_url(version, erp_license):
         response_body = response.json()
         if has_update(response_body):
             try:
-                url, md5, filename = response_body['url'], response_body[u'md5'], response_body[u'filename']
+                url, md5, filename = response_body[u'url'], response_body[u'md5'], response_body[u'filename']
                 return url, md5, filename
             except KeyError:
                 job_log.exception('not found key in response json')
@@ -80,11 +81,11 @@ def download_zip():
 
     if not (md5key and filename and url):
         job_log.warning('id: {0}, md5key: {1}, download url: {2}'.format(_LOG_ID, md5key, url))
-        return
+        return False
 
     response = requests.get(url=url)
     if not response_ok(response):
-        pass
+        return False
     download_file = os.path.join(download_path, filename)
     try:
         with open(download_file, 'wb') as f:
@@ -92,5 +93,11 @@ def download_zip():
         if not compare_md5(md5key, download_file):
             job_log.warning('id: {0}, the md5 key of update file not match the server gave'.format(_LOG_ID))
         notify_update(download_file)
+        return True
     except IOError:
         job_log.warning('id: {0}, failed to write update file "{1}".'.format(_LOG_ID, download_file))
+        return False
+
+def download():
+    if not download_zip():
+        feedback(status='failed', reason='download', log_id=_LOG_ID)
