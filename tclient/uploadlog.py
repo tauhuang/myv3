@@ -77,6 +77,7 @@ def upload_file(filename):
                     else:
                         post_json['base64String'] = ''
                         post_json['isEnd'] = 'Y'
+                        http_post(post_json)
                         break
         except IOError:
             job_log.error('id: {0}, failed to read log file {0}'.format(_LOG_ID, filename))
