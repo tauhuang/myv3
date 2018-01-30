@@ -7,7 +7,7 @@ import os.path
 import requests
 import uuid
 from tclient import version
-from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF, ERPLicense
+from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF, erp_license
 from tclient.log import job_log, safe_logmsg
 from tclient.util import mkdir_not_exists, cal_file_md5, MyConfigParser
 
@@ -74,7 +74,7 @@ def notify_update(filename):
 
 
 def download_zip():
-    url, md5key, filename = get_download_url(version, ERPLicense().license)
+    url, md5key, filename = get_download_url(version, erp_license)
     download_path = os.path.join(ROOT_DIR, 'download')
     mkdir_not_exists(download_path)
 

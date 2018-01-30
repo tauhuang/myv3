@@ -8,7 +8,7 @@ import datetime
 import os
 import requests
 import uuid
-from config import safe_baseurl, ERPLicense
+from config import safe_baseurl, erp_license
 from tclient.log import job_log, DATE_FORMAT, BASE_LOGDIR
 from tclient.util import cal_file_md5
 
@@ -38,7 +38,7 @@ def get_filemd5(filename):
 def response_ok(response, filename):
     if not response.ok:
         job_log.warning('id: {0}, request: {1}, response: code: {2}, reason: {3}, message {4}'.format(
-            _LOG_ID, response.request, response.status_code, response.reason, response.content))
+            _LOG_ID, response.url, response.status_code, response.reason, response.content))
         return False
     status = response.json()['status']
     if status == u'notmatched':
@@ -60,7 +60,7 @@ def http_post(json_dict):
 
 def upload_file(filename):
     post_json = {
-                 'erpLic': ERPLicense().license,
+                 'erpLic': erp_license,
                  'md5': get_filemd5(filename),
                  'isEnd': 'N',
                  'fileName': os.path.basename(filename),

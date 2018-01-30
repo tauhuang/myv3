@@ -37,7 +37,7 @@ class ERPLicense(object):
     """T100 ERP License Number"""
 
     def __init__(self):
-        self.license = self._get_lic()
+        self._license = self._get_lic()
 
     @property
     def license(self):
@@ -62,3 +62,6 @@ class ERPLicense(object):
         except IOError:
             return ""
         return ""
+
+
+erp_license = ERPLicense().license
