@@ -21,7 +21,7 @@ def response_ok(response):
         job_log.warning(
             safe_logmsg(
                 'id: {0}, request_url: {1}, response: code: {2}, reason: {3}, message {4}'.format(
-                    _LOG_ID, response.url, response.status_code, response.reason, response.content
+                    _LOG_ID, response.url, response.status_code, response.reason, repr(response.content)
                 )
             )
         )

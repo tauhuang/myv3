@@ -38,7 +38,7 @@ def get_filemd5(filename):
 def response_ok(response, filename):
     if not response.ok:
         job_log.warning('id: {0}, request: {1}, response: code: {2}, reason: {3}, message {4}'.format(
-            _LOG_ID, response.url, response.status_code, response.reason, response.content))
+            _LOG_ID, response.url, response.status_code, response.reason, repr(response.content)))
         return False
     status = response.json()['status']
     if status == u'notmatched':

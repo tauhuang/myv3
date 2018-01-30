@@ -71,7 +71,7 @@ class HTTPPoster(object):
                 safe_logmsg(
                     'id: {0}, retry NO: {1}, request_url: {2}, response: code: {3}, reason: {4}, message {5}'.format(
                         _LOG_ID, 3-self.retry, self.response.url, self.response.status_code, self.response.reason,
-                        self.response.content
+                        repr(self.response.content)
                     )
                 )
             )
