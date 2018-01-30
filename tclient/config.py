@@ -41,7 +41,7 @@ class ERPLicense(object):
 
     @property
     def license(self):
-        return self.license
+        return self._license
 
     @license.setter
     def license(self, lic_no):
