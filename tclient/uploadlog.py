@@ -24,7 +24,7 @@ def return_log_path():
 def return_files():
     # return a list obtain full path file name
     log_path = return_log_path()
-    return [os.path.join(BASE_LOGDIR, i) for i in os.listdir(log_path)]
+    return [os.path.join(log_path, i) for i in os.listdir(log_path)]
 
 
 def get_filemd5(filename):
