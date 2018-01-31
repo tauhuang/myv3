@@ -6,6 +6,7 @@
 """提供一些工具性函数和类"""
 
 
+import gzip
 import hashlib
 import os
 import subprocess
@@ -137,3 +138,15 @@ def mkdir_not_exists(path):
         os.makedirs(path)
     else:
         pass
+
+
+def compress_file(src_filename, compressed_filename):
+    """use gzip compress file"""
+
+    if not os.path.exists(src_filename):
+        raise IOError('{0} not found'.format(src_filename))
+    if not os.path.isfile(src_filename):
+        raise TypeError('{0} is not a file'.format(src_filename))
+
+    with gzip.open(compressed_filename, 'wb') as dst, open(src_filename, 'rb') as src:
+        dst.write(src.read())
