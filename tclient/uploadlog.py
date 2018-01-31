@@ -116,6 +116,15 @@ def get_filemd5(filename):
         return ''
 
 
+def encode_file(filename):
+    try:
+        with open(filename, 'rb') as f:
+            return base64.b64encode(f.read())
+    except IOError:
+        job_log.warning('id: {0}, failed to read file {1}'.format(_LOG_ID, filename))
+        return ''
+
+
 def response_ok(response, retry_no):
     if not response.ok:
         job_log.warning('id: {0}, Retry No: {1}, request: {2}, response: code: {3}, reason: {4}, message {5}'.format(
@@ -135,7 +144,12 @@ def http_post(json_dict):
         retry_times -= 1
 
 
-def upload():
+def upload(logdata=_logdata):
     file_list = return_compressed_files()
+    logdata.logdate = os.path.basename(return_log_path())
     for f in file_list:
-        pass
+        logdata.filename = os.path.basename(f)
+        logdata.md5 = cal_file_md5(f)
+        logdata.base64string = encode_file(f)
+        http_post(logdata.json)
+        os.remove(f)
