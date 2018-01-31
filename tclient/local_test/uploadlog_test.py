@@ -2,9 +2,9 @@
 
 
 from loadpackage import *
-from tclient.uploadlog import main
+from tclient.uploadlog import LogData, upload
 
 
-# 先修改 config.py 中的 erp_license = 'TDAAAADV'
 if __name__ == '__main__':
-    main()
+    logdata = LogData(erplicense='TDAAAADV')
+    upload(logdata)
