@@ -20,7 +20,7 @@ _CURRENT_TIME = time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())
 
 
 
-class Data(object):
+class StatusData(object):
     """必须传入 status 的值,值为 success 或 faild. 若 status 为 faild 则需要传入 reason 和 log_id"""
 
     def __init__(self,
@@ -80,6 +80,6 @@ class HTTPPoster(object):
 
 
 def feedback(status, reason=None, log_id=None):
-    json_data = Data(status=status, reason=reason, log_id=log_id)
+    json_data = StatusData(status=status, reason=reason, log_id=log_id)
     http_poster = HTTPPoster(json_data.json)
     http_poster.post()
