@@ -65,7 +65,7 @@ class LogData(object):
 
     @base64string.setter
     def base64string(self, base64_str):
-        self._base64string =  base64_str
+        self._base64string = base64_str
 
     @property
     def json(self):
