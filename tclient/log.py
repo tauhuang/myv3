@@ -116,6 +116,13 @@ job_log = construct_logger('job')
 
 
 def safe_logmsg(msg):
+    """
+    If log message string is non ASCII string, use this function.
+    For example:
+    >>>from tclient.log import job_log, safe_logmsg
+    >>>job_log.info(safe_logmsg('这是一个 safe_logmsg() 的例子'))
+    """
+
     try:
         return to_unicode(msg)
     except UnicodeDecodeError:
