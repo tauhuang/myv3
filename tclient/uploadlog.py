@@ -57,7 +57,7 @@ class LogData(object):
     @logdate.setter
     def logdate(self, logdate_str):
         # format: 20180105
-        self._logdate = repr(logdate_str)
+        self._logdate = logdate_str
 
     @property
     def base64string(self):
