@@ -9,7 +9,7 @@ import uuid
 from tclient import version
 from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF, erp_license
 from tclient.feedback import feedback
-from tclient.log import job_log, safe_logmsg
+from tclient.log import mon_log, safe_logmsg
 from tclient.util import mkdir_not_exists, cal_file_md5, MyConfigParser
 
 
@@ -19,7 +19,7 @@ _LOG_ID = uuid.uuid4()
 
 def response_ok(response):
     if not response.ok:
-        job_log.warning(
+        mon_log.warning(
             safe_logmsg(
                 'id: {0}, request_url: {1}, response: code: {2}, reason: {3}, message {4}'.format(
                     _LOG_ID, response.url, response.status_code, response.reason, repr(response.content)
@@ -35,7 +35,7 @@ def has_update(response_body):
     if isinstance(updatestat, basestring):
         return updatestat.upper() == u'Y'
     else:
-        job_log.warning(
+        mon_log.warning(
             safe_logmsg(
                 'id: {0}, response key "update" value is not string type, value is {1} type: {2}'.format(
                     _LOG_ID, updatestat, type(updatestat)
@@ -56,7 +56,7 @@ def get_download_url(version, erp_license):
                 url, md5, filename = response_body[u'url'], response_body[u'md5'], response_body[u'filename']
                 return url, md5, filename
             except KeyError:
-                job_log.exception('not found key in response json')
+                mon_log.exception('not found key in response json')
     return '', '', ''
 
 
@@ -80,7 +80,7 @@ def download_zip():
     mkdir_not_exists(download_path)
 
     if not (md5key and filename and url):
-        job_log.warning('id: {0}, md5key: {1}, download url: {2}'.format(_LOG_ID, md5key, url))
+        mon_log.warning('id: {0}, md5key: {1}, download url: {2}'.format(_LOG_ID, md5key, url))
         return False
 
     response = requests.get(url=url)
@@ -91,11 +91,11 @@ def download_zip():
         with open(download_file, 'wb') as f:
             f.write(response.content)
         if not compare_md5(md5key, download_file):
-            job_log.warning('id: {0}, the md5 key of update file not match the server gave'.format(_LOG_ID))
+            mon_log.warning('id: {0}, the md5 key of update file not match the server gave'.format(_LOG_ID))
         notify_update(download_file)
         return True
     except IOError:
-        job_log.warning('id: {0}, failed to write update file "{1}".'.format(_LOG_ID, download_file))
+        mon_log.warning('id: {0}, failed to write update file "{1}".'.format(_LOG_ID, download_file))
         return False
 
 def download():
