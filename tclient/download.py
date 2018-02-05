@@ -100,4 +100,4 @@ def download_zip():
 
 def download():
     if not download_zip():
-        feedback(status='failed', reason='download', log_id=_LOG_ID)
+        feedback(status='failed', reason='download', log_id=str(_LOG_ID))

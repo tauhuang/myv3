@@ -73,7 +73,7 @@ def update():
             mon_log.error('id : {0}, tarfilename is empty'.format(_LOG_ID))
     disbale_update_prep()
     if not compress_ok:
-        feedback('failed', 'installation', _LOG_ID)
+        feedback('failed', 'installation', str(_LOG_ID))
 
     if install_update:
         # 返回是否成功的 Bool 值 和 log_id， 如果返回 True， 则 log_id 为空字符串
@@ -81,4 +81,4 @@ def update():
             install_update.run()
         except Exception:
             mon_log.error('id: {0}, failed to install update'.format(_LOG_ID))
-            feedback('failed', 'installation', _LOG_ID)
+            feedback('failed', 'installation', str(_LOG_ID))
