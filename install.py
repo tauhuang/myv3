@@ -8,6 +8,7 @@ try:
     from tclient import version
 except ImportError:
     version = '3.0.0 beta'
+import warnings
 
 
 _ROOT_DIR = os.path.abspath(sys.argv[0])
@@ -19,7 +20,7 @@ def gen_release_file():
         with open(release_file, 'wt') as f:
             f.write('Version:'+ version)
     except IOError:
-        raise SystemExit("failed to create file '{0}'".format(release_file))
+        warnings.warn("failed to create file '{0}'".format(release_file), UserWarning)
 
 
 def gen_env_file():
