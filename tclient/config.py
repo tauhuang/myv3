@@ -5,11 +5,10 @@
 
 import os.path
 import re
-import sys
 
 
 # root dir 是 config.py 所在路径的父目录
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 BASE_URL = 'http://172.16.101.43/wstopprd/ws/r'
 DEFAULT_CONF = os.path.join(ROOT_DIR, 'conf', 'tclient.cnf')
 
