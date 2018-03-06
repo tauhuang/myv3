@@ -110,7 +110,7 @@ def cal_file_md5(filename):
     if not os.path.exists(filename):
         raise IOError('{0} not exists'.format(filename))
     if not os.path.isfile(filename):
-        raise ValueError('{0} is not a file'.formate(filename))
+        raise ValueError('{0} is not a file'.format(filename))
 
     md5obj = hashlib.md5()
     try:
