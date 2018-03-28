@@ -14,7 +14,7 @@ from tclient.config import safe_baseurl, erp_license
 from tclient.log import job_log, safe_logmsg
 
 
-URL = '/'.join([safe_baseurl.base_url, 'updatestatus'])
+_URL = '/'.join([safe_baseurl.base_url, 'updatestatus'])
 _LOG_ID = uuid.uuid4()
 _CURRENT_TIME = time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())
 
@@ -49,7 +49,7 @@ class StatusData(object):
 class HTTPPoster(object):
     """必须传入需要上传的 json 数据"""
 
-    def __init__(self, json, url=URL):
+    def __init__(self, json, url=_URL):
         self.url = url
         self.json = json
         self.retry = 3

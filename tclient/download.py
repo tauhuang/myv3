@@ -7,13 +7,12 @@ import os.path
 import requests
 import uuid
 from tclient import version
-from tclient.config import ROOT_DIR, SafeBaseURL, DEFAULT_CONF, erp_license
+from tclient.config import ROOT_DIR, safe_baseurl, DEFAULT_CONF, erp_license
 from tclient.feedback import feedback
 from tclient.log import mon_log, safe_logmsg
 from tclient.util import mkdir_not_exists, cal_file_md5, MyConfigParser
 
 
-_BASE_URL = SafeBaseURL()
 _LOG_ID = uuid.uuid4()
 
 
@@ -47,7 +46,7 @@ def has_update(response_body):
 def get_download_url(version, erp_license):
     """返回更新包压缩文件包的 md5 校验值和下载 URL"""
 
-    url = '/'.join([_BASE_URL.base_url, 'updateprog'])
+    url = '/'.join([safe_baseurl.base_url, 'updateprog'])
     response = requests.get(url=url, params={'version': version, 'erpLic': erp_license})
     if response_ok(response):
         response_body = response.json()
