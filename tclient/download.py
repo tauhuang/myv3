@@ -43,6 +43,7 @@ def has_update(response_body):
         )
         return False
 
+
 def get_download_url(version, erp_license):
     """返回更新包压缩文件包的 md5 校验值和下载 URL"""
 

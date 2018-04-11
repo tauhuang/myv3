@@ -80,7 +80,7 @@ def merge_dicts(*args):
 def convert_unicode_to_str(data, ignore_dicts=False):
     """将一个 Unicode 或 list、dict 的 Unicode 成员转换为 str """
 
-    if not isinstance(data, (basestring, unicode, list, dict)):
+    if not isinstance(data, (basestring, list, dict)):
         raise ValueError
     if isinstance(data, unicode):
         return data.encode('utf-8')
