@@ -51,25 +51,27 @@ def uncompress(tarfilename):
     return False
 
 
-def disbale_update_prep():
-    cnf = MyConfigParser()
-    cnf.read(DEFAULT_CONF)
-    cnf.set('update', 'prepare', 'N')
-    cnf.set('update', 'file', '')
-    cnf.commit()
+def disbale_update_prep(configer):
+    if not configer.has_section('update'):
+        configer.add_section('update')
+    configer.set('update', 'prepare', 'N')
+    configer.set('update', 'file', '')
+    configer.commit()
 
 
 def update():
     cnf = MyConfigParser()
     cnf.read(DEFAULT_CONF)
     compress_ok = False
+    if not cnf.has_section('update'):
+        return
+
     if cnf.get('update', 'prepare') == 'Y':
         filename = cnf.get('update', 'file')
         if filename:
             compress_ok = uncompress(filename)
         else:
             mon_log.error('id : {0}, tarfilename is empty'.format(_LOG_ID))
-    disbale_update_prep()
     if not compress_ok:
         feedback('failed', 'installation', str(_LOG_ID))
 
@@ -80,3 +82,4 @@ def update():
         except Exception:
             mon_log.error('id: {0}, failed to install update'.format(_LOG_ID))
             feedback('failed', 'installation', str(_LOG_ID))
+    disbale_update_prep(cnf)
