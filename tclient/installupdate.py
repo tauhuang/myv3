@@ -27,16 +27,14 @@ from tclient.util import MyConfigParser, mkdir_not_exists
 _LOG_ID = uuid.uuid4()
 _TMPDIR = os.path.join(ROOT_DIR, 'tmp')
 _BACKUP_DIR = os.path.join(ROOT_DIR, 'backup')
-_BACKUP_LIST = [os.path.join(ROOT_DIR, 'tclient'),
-                os.path.join(ROOT_DIR, 'conf'),
-                os.path.join(ROOT_DIR, 'db')]
+_BACKUP_LIST = (os.path.join(ROOT_DIR, 'tclient'), os.path.join(ROOT_DIR, 'conf'))
 
 
 def backup():
     shutil.rmtree(_BACKUP_DIR)
     mkdir_not_exists(_BACKUP_DIR)
     for i in _BACKUP_LIST:
-        shutil.move(i, os.path.join(_BACKUP_DIR, os.path.basename(i)))
+        shutil.copytree(i, os.path.join(_BACKUP_DIR, os.path.basename(i)))
 
 
 def uncompress(tarfilename):

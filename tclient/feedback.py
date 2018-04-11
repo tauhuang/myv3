@@ -10,11 +10,11 @@ import requests
 import time
 import uuid
 from tclient import version
-from tclient.config import safe_baseurl, erp_license
+from tclient.config import BASE_URL, erp_license
 from tclient.log import job_log, safe_logmsg
 
 
-_URL = '/'.join([safe_baseurl.base_url, 'updatestatus'])
+_URL = '/'.join([BASE_URL, 'updatestatus'])
 _LOG_ID = uuid.uuid4()
 _CURRENT_TIME = time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())
 

@@ -8,7 +8,7 @@ import datetime
 import os
 import requests
 import uuid
-from config import safe_baseurl, erp_license, ROOT_DIR
+from config import BASE_URL, erp_license, ROOT_DIR
 from tclient.log import job_log, DATE_FORMAT, BASE_LOGDIR
 from tclient.util import cal_file_md5, mkdir_not_exists, compress_file
 
@@ -134,7 +134,7 @@ def response_ok(response, retry_no):
 
 
 def http_post(json_dict):
-    url = '/'.join([safe_baseurl.base_url, 'uploadlog'])
+    url = '/'.join([BASE_URL, 'uploadlog'])
     retry_times = 3
     # if failed retry three times
     while retry_times:
