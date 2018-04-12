@@ -11,7 +11,7 @@ import re
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 # BASE_URL 后无/
 BASE_URL = 'http://122.146.130.244:8081/tclient/v1'
-DEFAULT_CONF = os.path.join(ROOT_DIR, 'conf', 'tclient.cnf')
+CONF_FILE = os.path.join(ROOT_DIR, 'conf', 'tclient.cnf')
 
 
 class ERPLicense(object):

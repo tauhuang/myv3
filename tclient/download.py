@@ -7,7 +7,7 @@ import os.path
 import requests
 import uuid
 from tclient import version
-from tclient.config import ROOT_DIR, BASE_URL, DEFAULT_CONF, erp_license
+from tclient.config import ROOT_DIR, BASE_URL, CONF_FILE, erp_license
 from tclient.feedback import feedback
 from tclient.log import job_log, safe_logmsg
 from tclient.util import mkdir_not_exists, cal_file_md5, MyConfigParser
@@ -66,7 +66,7 @@ def compare_md5(md5key, filename):
 
 def notify_update(filename):
     cnf = MyConfigParser()
-    cnf.read(DEFAULT_CONF)
+    cnf.read(CONF_FILE)
     if not cnf.has_section('update'):
         cnf.add_section('update')
     cnf.set('update', 'prepare', value='Y')

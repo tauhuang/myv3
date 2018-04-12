@@ -10,7 +10,7 @@ import os.path
 import shutil
 import tarfile
 import uuid
-from tclient.config import ROOT_DIR, DEFAULT_CONF
+from tclient.config import ROOT_DIR, CONF_FILE
 from tclient.feedback import feedback
 from tclient.log import mon_log
 from tclient.util import MyConfigParser, mkdir_not_exists, run_cmd
@@ -62,7 +62,7 @@ def rollback():
 
 def update():
     cnf = MyConfigParser()
-    cnf.read(DEFAULT_CONF)
+    cnf.read(CONF_FILE)
     compress_ok = False
     if not cnf.has_section('update'):
         return
