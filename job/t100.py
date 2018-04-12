@@ -102,7 +102,7 @@ def get_gdcax_ver():
     return {"gdcaxVer": "not found"}
 
 
-def get_t100_info():
+def get_data():
     return merge_dicts(get_erp_lic(),
                        get_t100_ver(),
                        get_fglrun_ver(),
