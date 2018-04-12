@@ -60,8 +60,6 @@ def rollback():
             pass
 
 
-
-
 def update():
     cnf = MyConfigParser()
     cnf.read(DEFAULT_CONF)
@@ -75,6 +73,12 @@ def update():
             compress_ok = uncompress(filename)
         else:
             mon_log.error('id : {0}, tarfilename is empty'.format(_LOG_ID))
+
+    # disable install update notify
+    cnf.set('update', 'prepare', value='N')
+    cnf.set('update', 'file', value='')
+    cnf.commit()
+
     if not compress_ok:
         feedback('failed', 'installation', str(_LOG_ID))
         return
