@@ -47,6 +47,7 @@ def verify_conn(user, passwd, inst_name):
 
 
 def exe_sql(user, passwd, inst_name, sql_str):
+    """只执行查询 SEELCT SQL语句. 执行有异常， 则抛出 SQLError， 正常执行则返回查询结果"""
     if not check_cxora():
         raise SQLError(_imp_errmsg)
 
