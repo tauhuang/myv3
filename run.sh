@@ -6,4 +6,4 @@ ROOTDIR=$(dirname $0)
 export PATH=${ROOTDIR}/python-2.7.14/bin:$PATH
 alias python=${ROOTDIR}/python-2.7.14/bin/python
 
-python $@ &
+python $@
