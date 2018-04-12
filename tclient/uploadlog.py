@@ -102,8 +102,8 @@ def return_compressed_files():
             compressed_filename = os.path.join(tempdir, os.path.basename(f)+'.gz')
             compress_file(f, compressed_filename)
             compressed_files.append(compressed_filename)
-        except Exception:
-            job_log.exception('id: {0}, Failed to compress log {1}'.format(_LOG_ID, f))
+        except Exception as e:
+            job_log.exception('id: {0}, Failed to compress log {1}, error message: {2}'.format(_LOG_ID, f, str(e)))
 
     return compressed_files
 
